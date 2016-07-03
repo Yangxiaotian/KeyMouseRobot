@@ -16,14 +16,14 @@ public class UI extends Thread implements ActionListener{
 	JFrame frame = new JFrame("按键鼠标机器人");
 	JPanel panel = new JPanel();
 	JTextField showField = new JTextField();
-	JButton startBtn = new JButton("Start");
+	JButton startBtn = new JButton("开始运行（快捷键F1）");
 	KeyMouseBusy keyMouseBusy;
 	public void run() {
 		createUI();
 	}
 	public void createUI() {
 		frame.setLocation(500,300);
-		frame.setSize(200,200);
+		frame.setSize(300,200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel.setLayout(new BorderLayout());
@@ -45,21 +45,18 @@ public class UI extends Thread implements ActionListener{
         }
 		GlobalScreen.addNativeMouseListener(mDetector);
 	    GlobalScreen.addNativeMouseMotionListener(mDetector);
-	    NativeKeyDetector kDetector = new NativeKeyDetector(showField);
+	    NativeKeyDetector kDetector = new NativeKeyDetector(this);
 	    GlobalScreen.addNativeKeyListener(kDetector);
 	    frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if("Start".equals(startBtn.getText())) {
-			startBtn.setText("Stop");
-			keyMouseBusy = new KeyMouseBusy();
-			keyMouseBusy.start();
-		}else {
-			startBtn.setText("Start");
-			keyMouseBusy.interrupt();
-		}
+		doWork();
+	}
+	public void doWork() {
+		keyMouseBusy = new KeyMouseBusy();
+		keyMouseBusy.start();
 	}
 }
 

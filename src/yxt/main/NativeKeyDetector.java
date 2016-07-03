@@ -1,19 +1,20 @@
 package yxt.main;
 
-import javax.swing.JTextField;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 public class NativeKeyDetector implements NativeKeyListener{
-	public JTextField keyTextField;
-	public NativeKeyDetector(JTextField keyTextField) {
-		this.keyTextField = keyTextField;
+	public UI ui;
+	public NativeKeyDetector(UI ui) {
+		this.ui = ui;
 	}
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
 		// TODO Auto-generated method stub
-		keyTextField.setText(""+e.getRawCode());
+		if(e.getRawCode() == 112) {
+			ui.doWork();
+		}
 	}
 
 	@Override
@@ -25,7 +26,6 @@ public class NativeKeyDetector implements NativeKeyListener{
 	@Override
 	public void nativeKeyTyped(NativeKeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
