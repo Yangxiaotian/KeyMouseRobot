@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+
 public class UI extends Thread implements ActionListener{
 	JFrame frame = new JFrame("按键鼠标机器人");
 	JPanel panel = new JPanel();
@@ -33,23 +36,18 @@ public class UI extends Thread implements ActionListener{
 		frame.getContentPane().add(panel);
 		panel.add(startBtn, BorderLayout.CENTER);
 		panel.add(mouseLoc, BorderLayout.SOUTH);
-		frame.addMouseMotionListener(new MouseMotionListener(){
+		NativeMouseDetector detector = new NativeMouseDetector(mouseLoc);
+		try {
+	            GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
 
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
-				mouseLoc.setText(e.getPoint().toString());
-			}
-
-			
-			
-		});
+            System.exit(1);
+        }
+		GlobalScreen.addNativeMouseListener(detector);
+	    GlobalScreen.addNativeMouseMotionListener(detector);
 		frame.setVisible(true);
 	}
 	@Override
