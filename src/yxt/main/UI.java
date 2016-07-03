@@ -3,9 +3,6 @@ package yxt.main;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
