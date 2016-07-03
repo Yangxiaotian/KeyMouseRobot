@@ -18,7 +18,7 @@ import org.jnativehook.NativeHookException;
 public class UI extends Thread implements ActionListener{
 	JFrame frame = new JFrame("按键鼠标机器人");
 	JPanel panel = new JPanel();
-	JTextField mouseLoc = new JTextField();
+	JTextField showField = new JTextField();
 	JButton startBtn = new JButton("Start");
 	KeyMouseBusy keyMouseBusy;
 	public void run() {
@@ -35,8 +35,8 @@ public class UI extends Thread implements ActionListener{
 		startBtn.addActionListener(this);
 		frame.getContentPane().add(panel);
 		panel.add(startBtn, BorderLayout.CENTER);
-		panel.add(mouseLoc, BorderLayout.SOUTH);
-		NativeMouseDetector detector = new NativeMouseDetector(mouseLoc);
+		panel.add(showField, BorderLayout.SOUTH);
+		NativeMouseDetector mDetector = new NativeMouseDetector(showField);
 		try {
 	            GlobalScreen.registerNativeHook();
         }
@@ -46,8 +46,11 @@ public class UI extends Thread implements ActionListener{
 
             System.exit(1);
         }
-		GlobalScreen.addNativeMouseListener(detector);
-	    GlobalScreen.addNativeMouseMotionListener(detector);
+		GlobalScreen.addNativeMouseListener(mDetector);
+	    GlobalScreen.addNativeMouseMotionListener(mDetector);
+	    NativeKeyDetector kDetector = new NativeKeyDetector(showField);
+	    GlobalScreen.addNativeKeyListener(kDetector);
+	    frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
 	}
 	@Override

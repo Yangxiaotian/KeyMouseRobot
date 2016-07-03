@@ -8,20 +8,19 @@ import java.io.File;
 import java.io.FileReader;
 
 public class KeyMouseBusy extends Thread{
-	
 	public void run() {
 		try {
-			while(true) {
-				Thread.sleep(500);
-				keyMouseWork(readConfig());
-			}
-		}catch(Exception e) {
-			
+			keyMouseWork(readConfig());
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	public String[] readConfig() throws Exception {
-		String path = "config.txt";
-		BufferedReader in = new BufferedReader(new FileReader(path));
+		BufferedReader in = new BufferedReader(new FileReader(Main.path));
 	    String configStr = null;
 	    configStr = in.readLine();
 	    in.close();
@@ -31,7 +30,7 @@ public class KeyMouseBusy extends Thread{
 		Robot robot = new Robot();
 		for(String s:config) {
 			if(s.startsWith("KEY:")) {
-				String[] keyCodeArr = s.substring(3).split(",");
+				String[] keyCodeArr = s.substring(4).split(",");
 				for(String keyStr: keyCodeArr) {
 					String[] sameTimeKeys = keyStr.split("|");
 					for(String keyCodeStr: sameTimeKeys) {
@@ -46,36 +45,55 @@ public class KeyMouseBusy extends Thread{
 					
 				}
 			}else if(s.startsWith("MOUSE:")) {
-				String[] mouseLocationArr = s.substring(5).split("/");
+				String[] mouseLocationArr = s.substring(6).split("/");
 				for(String actionStr: mouseLocationArr) {
-					String actPart = actionStr.split("*")[0];
-					String locPart = actionStr.split("*")[1];
-					int x = Integer.parseInt(locPart.substring(1).split(",")[0]);
-					int y = Integer.parseInt(locPart.substring(1).split(",")[1]);
+					String actPart = actionStr.split("\\*")[0];
+					String locPart = actionStr.split("\\*")[1];
+					int x = Integer.parseInt(locPart.split(",")[0]);
+					int y = Integer.parseInt(locPart.split(",")[1]);
 					robot.mouseMove(x, y);
 					String[] actArr = actPart.split("@");
 					String actType = actArr[0];
-					if(actPart.length()==1) {
+					if(actArr.length == 1) {
 						switch(actType) {
-						case "SJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);
-						case "DJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
+						case "SJ": 
+							robot.mousePress(InputEvent.BUTTON1_MASK);
+							robot.delay(500);
+							robot.mouseRelease(InputEvent.BUTTON1_MASK);
+						case "DJ": 
+							robot.mousePress(InputEvent.BUTTON1_MASK);
+							robot.delay(500);
+							robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
 						case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 						}
-					}else if(actPart.length() == 2) {
+					}else if(actArr.length == 2) {
 						long times = Long.parseLong(actArr[1]);
 						if(times == -1) {
 							while(true) {
 								switch(actType) {
-								case "SJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);
-								case "DJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
+								case "SJ": 
+									robot.mousePress(InputEvent.BUTTON1_MASK);
+									robot.delay(500);
+									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+								case "DJ": 
+									robot.mousePress(InputEvent.BUTTON1_MASK);
+									robot.delay(500);
+									robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
 								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 								}
 							}
 						}else {
 							for(int i = 0; i < times; i++) {
 								switch(actType) {
-								case "SJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);
-								case "DJ": robot.mousePress(InputEvent.BUTTON1_MASK);robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
+								case "SJ": 
+									robot.mousePress(InputEvent.BUTTON1_MASK);
+									robot.delay(10);
+									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+								case "DJ": 
+									robot.mousePress(InputEvent.BUTTON1_MASK);
+									robot.delay(10);
+									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+									break;
 								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 								}
 							}
@@ -83,7 +101,7 @@ public class KeyMouseBusy extends Thread{
 					}
 				}
 			}else if(s.startsWith("WAIT:")) {
-				long waitms = Long.parseLong(s.substring(4));
+				long waitms = Long.parseLong(s.substring(5));
 				try {
 					new Thread().wait(waitms);
 				} catch (InterruptedException e) {
