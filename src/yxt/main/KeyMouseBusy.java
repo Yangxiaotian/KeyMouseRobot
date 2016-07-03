@@ -32,11 +32,12 @@ public class KeyMouseBusy extends Thread{
 			if(s.startsWith("KEY:")) {
 				String[] keyCodeArr = s.substring(4).split(",");
 				for(String keyStr: keyCodeArr) {
-					String[] sameTimeKeys = keyStr.split("|");
+					String[] sameTimeKeys = keyStr.split("\\|");
 					for(String keyCodeStr: sameTimeKeys) {
 						int keyInt = Integer.parseInt(keyCodeStr);
 						robot.keyPress(keyInt);
 					}
+					robot.delay(100);
 					for(int i = sameTimeKeys.length-1; i >= 0 ; i--) {
 						String keyCodeStr = sameTimeKeys[i];
 						int keyInt = Integer.parseInt(keyCodeStr);
@@ -58,11 +59,9 @@ public class KeyMouseBusy extends Thread{
 						switch(actType) {
 						case "SJ": 
 							robot.mousePress(InputEvent.BUTTON1_MASK);
-							robot.delay(500);
 							robot.mouseRelease(InputEvent.BUTTON1_MASK);
 						case "DJ": 
 							robot.mousePress(InputEvent.BUTTON1_MASK);
-							robot.delay(500);
 							robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
 						case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 						}
@@ -73,11 +72,9 @@ public class KeyMouseBusy extends Thread{
 								switch(actType) {
 								case "SJ": 
 									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.delay(500);
 									robot.mouseRelease(InputEvent.BUTTON1_MASK);
 								case "DJ": 
 									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.delay(500);
 									robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
 								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 								}
@@ -87,15 +84,14 @@ public class KeyMouseBusy extends Thread{
 								switch(actType) {
 								case "SJ": 
 									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.delay(10);
 									robot.mouseRelease(InputEvent.BUTTON1_MASK);
 								case "DJ": 
 									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.delay(10);
 									robot.mouseRelease(InputEvent.BUTTON1_MASK);
 									break;
 								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 								}
+								robot.delay(100);
 							}
 						}
 					}
@@ -103,7 +99,7 @@ public class KeyMouseBusy extends Thread{
 			}else if(s.startsWith("WAIT:")) {
 				long waitms = Long.parseLong(s.substring(5));
 				try {
-					new Thread().wait(waitms);
+					Thread.sleep(waitms);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
