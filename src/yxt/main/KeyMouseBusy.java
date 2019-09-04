@@ -10,7 +10,11 @@ import java.io.FileReader;
 public class KeyMouseBusy extends Thread{
 	public void run() {
 		try {
-			keyMouseWork(readConfig());
+			while(true) {
+				keyMouseWork(readConfig());
+				sleep(3000);
+			}
+			
 		} catch (AWTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
