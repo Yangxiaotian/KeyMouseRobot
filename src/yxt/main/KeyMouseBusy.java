@@ -30,6 +30,12 @@ public class KeyMouseBusy extends Thread{
 	    in.close();
 		return configStr.split("#");
 	}
+	public double getRandomOffset() {
+		double r = Math.random();
+		double r1 = Math.random();
+		double offset = 1+(r > 0.5 ? 1 : -1)*r1;
+		return offset;
+	}
 	public void keyMouseWork(String[] config) throws AWTException {
 		Robot robot = new Robot();
 		for(String s:config) {
@@ -50,23 +56,54 @@ public class KeyMouseBusy extends Thread{
 					
 				}
 			}else if(s.startsWith("MOUSE:")) {
+				int x0 = NativeMouseDetector.x;
+				int y0 = NativeMouseDetector.y;
 				String[] mouseLocationArr = s.substring(6).split("/");
 				for(String actionStr: mouseLocationArr) {
 					String actPart = actionStr.split("\\*")[0];
 					String locPart = actionStr.split("\\*")[1];
 					int x = Integer.parseInt(locPart.split(",")[0]);
 					int y = Integer.parseInt(locPart.split(",")[1]);
-					robot.mouseMove(x, y);
+					int increment = 1;
+					if(x0 > x) {
+						increment = -1;
+					}
+					int posX = x0 + increment;
+					double a = 1.0*(y-y0)/(x*x-x0*x0);
+					double b = y0-a*x0*x0;
+					int posY = y0;
+					while(posX != x) {
+						
+						posY = (int)Math.round(a*posX*posX+b);
+						
+						
+						robot.mouseMove(posX, posY);
+//						robot.mouseMove(k, y1);
+//						robot.mouseMove(x, y0);
+						robot.delay(2);
+						posX = posX + increment;
+					}
+					robot.delay(50);
+					robot.mouseMove(posX + 1*increment, posY + 1*increment);
+					robot.delay(8);
+					robot.mouseMove(posX + -1*increment, posY + -1*increment);
+					robot.delay(50);
 					String[] actArr = actPart.split("@");
 					String actType = actArr[0];
 					if(actArr.length == 1) {
 						switch(actType) {
 						case "SJ": 
 							robot.mousePress(InputEvent.BUTTON1_MASK);
+							robot.delay((int)(10*getRandomOffset()));
+							robot.mouseMove(posX, posY + 1);
 							robot.mouseRelease(InputEvent.BUTTON1_MASK);
+							robot.delay((int)(80*getRandomOffset()));
 						case "DJ": 
 							robot.mousePress(InputEvent.BUTTON1_MASK);
-							robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
+							robot.delay((int)(10*getRandomOffset()));
+							robot.mouseMove(posX, posY + 1);
+							robot.mouseRelease(InputEvent.BUTTON1_MASK);
+							robot.delay((int)(80*getRandomOffset()));
 						case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
 						}
 					}else if(actArr.length == 2) {

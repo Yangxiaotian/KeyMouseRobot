@@ -9,6 +9,7 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 
 public class NativeMouseDetector implements NativeMouseInputListener {
 	private JTextField mouseLocField;
+	public static int x, y;
 	public NativeMouseDetector(JTextField mouseLocField) {
 		this.mouseLocField = mouseLocField;
 	}
@@ -25,7 +26,9 @@ public class NativeMouseDetector implements NativeMouseInputListener {
     }
 
     public void nativeMouseMoved(NativeMouseEvent e) {
-        mouseLocField.setText("当前鼠标位置: " + e.getX() + "," + e.getY());
+    	x = e.getX();
+    	y = e.getY();
+        mouseLocField.setText("当前鼠标位置: " + x + "," + y);
     }
 
     public void nativeMouseDragged(NativeMouseEvent e) {
