@@ -58,6 +58,9 @@ public class KeyMouseBusy extends Thread{
 			}else if(s.startsWith("MOUSE:")) {
 				int x0 = NativeMouseDetector.x;
 				int y0 = NativeMouseDetector.y;
+				if(x0 > 1365 || y0 > 768) {
+					x0 = y0 = 0;
+				}
 				String[] mouseLocationArr = s.substring(6).split("/");
 				for(String actionStr: mouseLocationArr) {
 					String actPart = actionStr.split("\\*")[0];
