@@ -12,8 +12,8 @@ public class NativeKeyDetector implements NativeKeyListener{
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getRawCode() == 112) {
-			ui.doWork();
+		if(e.getKeyCode() == 59) {
+			ui.doOrNot();
 		}
 	}
 

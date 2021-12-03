@@ -6,15 +6,18 @@ import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class KeyMouseBusy extends Thread{
 	public void run() {
 		try {
-			while(true) {
-				keyMouseWork(readConfig());
-				sleep(3000);
-			}
-			
+//			while(true) {
+//				keyMouseWork(readConfig());
+//				sleep(3000);
+//			}
+			keyMouseWork(readConfig());
 		} catch (AWTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,6 +38,38 @@ public class KeyMouseBusy extends Thread{
 		double r1 = Math.random();
 		double offset = 1+(r > 0.5 ? 1 : -1)*r1;
 		return offset;
+	}
+	public static String translateHumanLanguage2Config(String humanLanguage) {
+		String s = "";
+		for (int i = 0; i < humanLanguage.length(); i++) {
+			char c = humanLanguage.charAt(i);
+			if (c >= 65 && c <= 90) {
+				s+="16|"+(int)c+",";
+			} else if (c >= 97 && c <= 122) {
+				s+=""+(int)(c-32)+",";
+			} else if (c == ' ') {
+				s +="32,";
+			} else if (c == '-'){
+				s +="109,";
+			} else if (c == '.') {
+				s += "110,";
+			} else {
+				s += (int)c+",";
+			}
+		}
+		return s.substring(0, s.length()-1);
+	}
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		do {
+			String humanLanguage = scanner.nextLine();
+			System.out.println(translateHumanLanguage2Config(humanLanguage));
+		} while (true);
+//		String s = "0123456789";
+//		for (int i = 0; i < s.length(); i++) {
+//			System.out.println((int)s.charAt(i));
+//		}
+		
 	}
 	public void keyMouseWork(String[] config) throws AWTException {
 		Robot robot = new Robot();
@@ -83,7 +118,7 @@ public class KeyMouseBusy extends Thread{
 						robot.mouseMove(posX, posY);
 //						robot.mouseMove(k, y1);
 //						robot.mouseMove(x, y0);
-						robot.delay(2);
+						robot.delay(1);
 						posX = posX + increment;
 					}
 					robot.delay(50);
@@ -96,18 +131,19 @@ public class KeyMouseBusy extends Thread{
 					if(actArr.length == 1) {
 						switch(actType) {
 						case "SJ": 
-							robot.mousePress(InputEvent.BUTTON1_MASK);
-							robot.delay((int)(10*getRandomOffset()));
-							robot.mouseMove(posX, posY + 1);
-							robot.mouseRelease(InputEvent.BUTTON1_MASK);
-							robot.delay((int)(80*getRandomOffset()));
+							robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+//							robot.delay((int)(10*getRandomOffset()));
+//							robot.mouseMove(posX, posY + 1);
+							robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+//							robot.delay((int)(80*getRandomOffset()));
 						case "DJ": 
-							robot.mousePress(InputEvent.BUTTON1_MASK);
-							robot.delay((int)(10*getRandomOffset()));
-							robot.mouseMove(posX, posY + 1);
-							robot.mouseRelease(InputEvent.BUTTON1_MASK);
-							robot.delay((int)(80*getRandomOffset()));
-						case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
+							robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+//							robot.delay((int)(10*getRandomOffset()));
+//							robot.mouseMove(posX, posY + 1);
+							robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+							break;
+//							robot.delay((int)(80*getRandomOffset()));
+						case "YJ": robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);break;
 						}
 					}else if(actArr.length == 2) {
 						long times = Long.parseLong(actArr[1]);
@@ -115,25 +151,25 @@ public class KeyMouseBusy extends Thread{
 							while(true) {
 								switch(actType) {
 								case "SJ": 
-									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+									robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+									robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 								case "DJ": 
-									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.mouseRelease(InputEvent.BUTTON1_MASK);break;
-								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
+									robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+									robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);break;
+								case "YJ": robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);break;
 								}
 							}
 						}else {
 							for(int i = 0; i < times; i++) {
 								switch(actType) {
 								case "SJ": 
-									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+									robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+									robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 								case "DJ": 
-									robot.mousePress(InputEvent.BUTTON1_MASK);
-									robot.mouseRelease(InputEvent.BUTTON1_MASK);
+									robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+									robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
 									break;
-								case "YJ": robot.mousePress(InputEvent.BUTTON3_MASK);robot.mouseRelease(InputEvent.BUTTON3_MASK);break;
+								case "YJ": robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);break;
 								}
 								robot.delay(100);
 							}

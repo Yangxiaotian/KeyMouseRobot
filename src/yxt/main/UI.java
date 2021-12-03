@@ -18,6 +18,7 @@ public class UI extends Thread implements ActionListener{
 	JTextField showField = new JTextField();
 	JButton startBtn = new JButton("开始运行（快捷键F1）");
 	KeyMouseBusy keyMouseBusy;
+	boolean isWorking = false;
 	public void run() {
 		createUI();
 	}
@@ -52,11 +53,31 @@ public class UI extends Thread implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		doWork();
+		doOrNot();
+	}
+	public void doOrNot() {
+		if (!isWorking) {
+			isWorking = true;
+			doWork();
+		} else {
+			try {
+				isWorking = false;
+				doRest();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 	public void doWork() {
-		keyMouseBusy = new KeyMouseBusy();
+		if (keyMouseBusy == null || keyMouseBusy.isInterrupted()) {
+			keyMouseBusy = new KeyMouseBusy();
+		}
 		keyMouseBusy.start();
+		
+	}
+	public void doRest() throws InterruptedException {
+		keyMouseBusy.interrupt();
 	}
 }
 
